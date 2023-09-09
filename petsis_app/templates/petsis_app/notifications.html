@@ -1,0 +1,63 @@
+{% extends 'petsis_app/layout.html' %}
+{% load static %}
+{% block title %}
+    Notifications
+{% endblock%}
+
+{% block page_header %}
+    Notifications
+{% endblock%}
+
+{% block content %}
+<link href="{% static 'petsis_app/css/style-notifications.css' %}" rel="stylesheet">
+    <div class="container">
+
+        <a  href="{% url 'notif_read_all'%}"> 
+            <div class="ps-4 mb-2 mark-all">
+                Mark All as Read <i class='bx bxs-check-circle'></i>&nbsp;
+            </div>
+        </a>
+        {% for notif in notifications_all %}
+            <a href="{% url 'notif_read' notif.id %}"> 
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <!-- Notif Details and Time-->
+                        <div class="row row-cols-2">
+                            <!-- Notif Icon-->   
+                            <div class="col" id="notif_details">
+                                {% if notif.notif_type == 'warning' %}
+                                <i class="fa-solid fa-circle-exclamation warning-notif"></i>
+                                {% elif notif.notif_type == 'danger' %}
+                                    <i class="fa-solid fa-triangle-exclamation danger-notif"></i>
+                                {% elif notif.notif_type == 'success' %}
+                                    <i class="fa-solid fa-square-check success-notif"></i>
+                                {% endif %}
+
+                                {% if notif.status == 'unread' %}
+                                    <span style="color: #2b9273">{{ notif.notif|safe }}</span>
+                                {% else %}
+                                    {{ notif.notif|safe }}
+                                {% endif %}
+                            </div>
+
+                            <div class="col text-muted ps-4 text-end" id="notif-time">
+                                {% if notif.status == 'unread' %}
+                                    <span style="color: #2b9273">{{ notif.notif_datetime }}</span>
+                                {% else %}
+                                    {{ notif.notif_datetime }}
+                                {% endif %}
+                            </div>
+
+                        </div>                      
+                    </div>
+                </div>
+            </a>
+        {% empty %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    You have no notifications yet
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
